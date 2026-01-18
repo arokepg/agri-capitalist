@@ -157,8 +157,6 @@ export default function InspectionModal({
   assetName,
   price
 }: InspectionModalProps) {
-  if (!assetType || !assetId || !assetName) return null;
-
   const [previewUpgrade, setPreviewUpgrade] = useState(false);
 
   useEffect(() => {
@@ -166,6 +164,8 @@ export default function InspectionModal({
       setPreviewUpgrade(false);
     }
   }, [assetType, assetId]);
+
+  if (!assetType || !assetId || !assetName) return null;
 
   const resolvedId = (() => {
     if (assetType !== 'structure') return assetId;

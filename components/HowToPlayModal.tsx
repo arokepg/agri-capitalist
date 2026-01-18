@@ -211,9 +211,9 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
                   }}>
                     <TrendingUpIcon size={24} color="#f59e0b" /> Stock Market
                   </h2>
-                  <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#334155', marginBottom: '12px' }}>
-                    Click <strong style={{ color: '#22c55e' }}>"LIVE MARKET"</strong> on the bottom ticker to access the Stock Exchange.
-                  </p>
+                    <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#334155', marginBottom: '12px' }}>
+                      Click <strong style={{ color: '#22c55e' }}>&quot;LIVE MARKET&quot;</strong> on the bottom ticker to access the Stock Exchange.
+                    </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <div style={{ padding: '12px', backgroundColor: 'rgba(100, 116, 139, 0.05)', borderRadius: '8px' }}>
                       <strong style={{ color: '#22c55e' }}>BUY:</strong> Purchase shares at current price. Profit when price increases.
@@ -285,7 +285,7 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
                       <ul style={{ fontSize: '13px', lineHeight: '1.6', color: '#334155', margin: '8px 0 0 0', paddingLeft: '20px' }}>
                         <li><strong>Wells:</strong> Drought immunity for surrounding tiles</li>
                         <li><strong>Barns:</strong> Reduce spoilage and depreciation</li>
-                        <li><strong>Comm Towers:</strong> Predict next turn's event</li>
+                        <li><strong>Comm Towers:</strong> Predict next turn&apos;s event</li>
                         <li><strong>Roads:</strong> Increase liquidation value to 85%</li>
                         <li><strong>Insurance:</strong> Protection against catastrophic losses</li>
                         <li><strong>Clinic:</strong> Prevent disease, boost livestock reproduction</li>
@@ -320,7 +320,7 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
                     paddingLeft: '24px'
                   }}>
                     <li>Right-click any item in the shop for detailed info</li>
-                    <li>Diversify your portfolio - don't put all eggs in one basket</li>
+                    <li>Diversify your portfolio - don&apos;t put all eggs in one basket</li>
                     <li>Infrastructure investments pay off long-term</li>
                     <li>Watch your Integrity score - it affects loan rates and opportunities</li>
                     <li>The stock market can be more profitable than farming if timed correctly</li>

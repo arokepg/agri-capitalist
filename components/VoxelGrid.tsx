@@ -5,7 +5,7 @@ import { useGameStore } from '@/store/GameStore';
 import { CropVoxelByType } from './CropVoxels';
 import { AnimalVoxelByType } from './AnimalVoxels';
 import { StructureVoxel } from './StructureVoxels';
-import { animated, useSpring } from '@react-spring/three';
+import { animated, useSpring, useSprings } from '@react-spring/three';
 
 function AnimatedAsset({ children, type, content, isNew, shouldDestroy, shouldHarvest }: { 
   children: React.ReactNode; 
@@ -61,6 +61,34 @@ function AnimatedAsset({ children, type, content, isNew, shouldDestroy, shouldHa
     config: { duration: 500 }
   });
 
+  const [rippleSpring, rippleApi] = useSpring(() => ({
+    o: 0,
+    config: { duration: 600 }
+  }));
+
+  const [poofSprings, poofApi] = useSprings(5, () => ({
+    posY: 0,
+    scale: 0.1,
+    opacity: 0
+  }));
+
+  useEffect(() => {
+    if (showRipple) {
+      rippleApi.start({ from: { o: 0.8 }, to: { o: 0 } });
+    }
+  }, [showRipple, rippleApi]);
+
+  useEffect(() => {
+    if (showPoof) {
+      poofApi.start((index) => ({
+        from: { posY: 0, scale: 0.1, opacity: 0.8 },
+        to: { posY: 1.5, scale: 0.3, opacity: 0 },
+        delay: index * 60,
+        config: { duration: 800 }
+      }));
+    }
+  }, [showPoof, poofApi]);
+
   const finalSpring = shouldDestroy ? destructionSpring : shouldHarvest ? harvestSpring : placementSpring;
 
   return (
@@ -80,7 +108,7 @@ function AnimatedAsset({ children, type, content, isNew, shouldDestroy, shouldHa
           <animated.meshStandardMaterial
             color="#ffffff"
             transparent
-            opacity={useSpring({ from: { o: 0.8 }, to: { o: 0 }, config: { duration: 600 } }).o}
+            opacity={rippleSpring.o}
             emissive="#ffffff"
             emissiveIntensity={0.6}
           />
@@ -88,13 +116,8 @@ function AnimatedAsset({ children, type, content, isNew, shouldDestroy, shouldHa
       )}
 
       {/* Stage 3: Smoke poof particles on destruction */}
-      {showPoof && Array.from({ length: 5 }).map((_, i) => {
+      {showPoof && poofSprings.map((poofSpring, i) => {
         const angle = (i / 5) * Math.PI * 2;
-        const poofSpring = useSpring({
-          from: { posY: 0, scale: 0.1, opacity: 0.8 },
-          to: { posY: 1.5, scale: 0.3, opacity: 0 },
-          config: { duration: 800 }
-        });
         return (
           <animated.mesh 
             key={i} 
