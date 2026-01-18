@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
 interface FourSeasonCycleProps {
   isActive: boolean;
@@ -17,58 +19,262 @@ const seasonData = {
     name: 'Spring',
     subtitle: 'Mùa Xuân',
     emoji: '🌸',
-    bg: 'linear-gradient(180deg, #fef3c7 0%, #fde68a 100%)',
+    bg: 'linear-gradient(180deg, #a7f3d0 0%, #6ee7b7 50%, #34d399 100%)',
+    sky: '#87ceeb',
     color: '#0f172a',
+    description: 'Rolling green hills',
   },
   summer: {
     name: 'Summer',
     subtitle: 'Mùa Hạ',
     emoji: '☀️',
-    bg: 'linear-gradient(180deg, #fed7aa 0%, #fdba74 100%)',
-    color: '#0f172a',
+    bg: 'linear-gradient(180deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%)',
+    sky: '#1e40af',
+    color: '#ffffff',
+    description: 'Vibrant blue sky with clouds',
   },
   autumn: {
     name: 'Autumn',
     subtitle: 'Mùa Thu',
     emoji: '🍂',
-    bg: 'linear-gradient(180deg, #fca5a5 0%, #f87171 100%)',
+    bg: 'linear-gradient(180deg, #fb923c 0%, #f97316 50%, #ea580c 100%)',
+    sky: '#dc2626',
     color: '#ffffff',
+    description: 'Sunset with palm silhouettes',
   },
   winter: {
     name: 'Winter',
     subtitle: 'Mùa Nước Nổi',
     emoji: '💧',
-    bg: 'linear-gradient(180deg, #bfdbfe 0%, #93c5fd 100%)',
-    color: '#0f172a',
+    bg: 'linear-gradient(180deg, #64748b 0%, #475569 50%, #334155 100%)',
+    sky: '#1e293b',
+    color: '#ffffff',
+    description: 'Rain clouds and water',
   },
 };
 
+// Animated Background Component for Each Season
+function SpringBackground() {
+  return (
+    <>
+      {/* Rolling Hills */}
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 0.6 }}
+        transition={{ duration: 1, ease: 'easeOut' }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '40%',
+          background: 'radial-gradient(ellipse at bottom, #4ade80 0%, #22c55e 50%, #16a34a 100%)',
+          borderRadius: '50% 50% 0 0 / 100% 100% 0 0',
+          filter: 'blur(1px)',
+        }}
+      />
+      <motion.div
+        initial={{ y: 80, opacity: 0 }}
+        animate={{ y: 0, opacity: 0.5 }}
+        transition={{ duration: 1.2, delay: 0.1, ease: 'easeOut' }}
+        style={{
+          position: 'absolute',
+          bottom: '-5%',
+          left: '10%',
+          right: '10%',
+          height: '35%',
+          background: 'radial-gradient(ellipse at bottom, #86efac 0%, #4ade80 50%, #22c55e 100%)',
+          borderRadius: '50% 50% 0 0 / 100% 100% 0 0',
+          filter: 'blur(1.5px)',
+        }}
+      />
+    </>
+  );
+}
+
+function SummerBackground() {
+  return (
+    <>
+      {/* Fast-moving clouds */}
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ x: '-20%', opacity: 0 }}
+          animate={{ 
+            x: '120%', 
+            opacity: [0, 0.8, 0.8, 0]
+          }}
+          transition={{ 
+            duration: 3 + i * 0.5, 
+            ease: 'linear',
+            delay: i * 0.4
+          }}
+          style={{
+            position: 'absolute',
+            top: `${10 + i * 15}%`,
+            width: '120px',
+            height: '50px',
+            background: '#ffffff',
+            borderRadius: '50px',
+            filter: 'blur(2px)',
+            opacity: 0.7,
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+function AutumnBackground() {
+  return (
+    <>
+      {/* Sunset vista with palm silhouettes */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.8 }}
+        transition={{ duration: 1 }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '50%',
+          background: 'linear-gradient(to top, #78350f 0%, #92400e 50%, #ea580c 100%)',
+        }}
+      />
+      
+      {/* Palm tree silhouettes */}
+      {[0, 1, 2].map((idx) => (
+        <motion.div
+          key={idx}
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 0.6 }}
+          transition={{ duration: 0.8, delay: idx * 0.2 }}
+          style={{
+            position: 'absolute',
+            bottom: '15%',
+            left: `${20 + idx * 30}%`,
+            width: '40px',
+            height: '120px',
+            background: '#1c1917',
+            clipPath: 'polygon(50% 0%, 40% 60%, 35% 100%, 65% 100%, 60% 60%)',
+            filter: 'blur(0.5px)',
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+function WinterBackground() {
+  return (
+    <>
+      {/* Rain clouds */}
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 0.9 }}
+        transition={{ duration: 1 }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '40%',
+          background: 'linear-gradient(to bottom, #334155 0%, #475569 100%)',
+          filter: 'blur(3px)',
+        }}
+      />
+      
+      {/* Rain particles */}
+      {[...Array(12)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ y: '-10%', opacity: 0 }}
+          animate={{ 
+            y: '110%',
+            opacity: [0, 0.7, 0.7, 0]
+          }}
+          transition={{
+            duration: 1.5,
+            delay: i * 0.15,
+            ease: 'linear',
+            repeat: 1,
+          }}
+          style={{
+            position: 'absolute',
+            left: `${10 + i * 8}%`,
+            width: '2px',
+            height: '20px',
+            background: '#cbd5e1',
+            filter: 'blur(0.5px)',
+          }}
+        />
+      ))}
+      
+      {/* Rising water plane visual */}
+      <motion.div
+        initial={{ y: '100%', opacity: 0 }}
+        animate={{ y: '60%', opacity: 0.4 }}
+        transition={{ duration: 1.5, ease: 'easeOut' }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '50%',
+          background: 'linear-gradient(to top, #0ea5e9 0%, rgba(14, 165, 233, 0.3) 100%)',
+          filter: 'blur(2px)',
+        }}
+      />
+    </>
+  );
+}
+
 export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycleProps) {
   const [currentSeasonIndex, setCurrentSeasonIndex] = useState(0);
+  const [cameraAngle, setCameraAngle] = useState(0);
   const seasons: Season[] = ['spring', 'summer', 'autumn', 'winter'];
   const currentSeason = seasons[currentSeasonIndex];
+  const progress = ((currentSeasonIndex + 1) / 4) * 100;
 
+  // Camera orbital pan effect (45 degrees over 8 seconds)
   useEffect(() => {
     if (!isActive) {
       setCurrentSeasonIndex(0);
+      setCameraAngle(0);
       return;
     }
+
+    const cameraInterval = setInterval(() => {
+      setCameraAngle(prev => Math.min(prev + 0.56, 45)); // 45° / 8s = ~0.56° per 100ms
+    }, 100);
 
     const timer = setTimeout(() => {
       if (currentSeasonIndex < 3) {
         setCurrentSeasonIndex((prev) => prev + 1);
       } else {
-        setTimeout(() => onComplete(), 300);
+        setTimeout(() => {
+          clearInterval(cameraInterval);
+          onComplete();
+        }, 300);
       }
     }, SEASON_DURATION);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(cameraInterval);
+    };
   }, [isActive, currentSeasonIndex, onComplete]);
 
   if (!isActive) return null;
 
   const season = seasonData[currentSeason];
-  const progress = ((currentSeasonIndex + 1) / 4) * 100;
+  const BackgroundComponent = {
+    spring: SpringBackground,
+    summer: SummerBackground,
+    autumn: AutumnBackground,
+    winter: WinterBackground,
+  }[currentSeason];
 
   return (
     <motion.div
@@ -84,8 +290,12 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
         alignItems: 'center',
         justifyContent: 'center',
         background: season.bg,
+        overflow: 'hidden',
       }}
     >
+      {/* Animated Season Background */}
+      <BackgroundComponent />
+
       {/* Simple floating particles - only 8 per season */}
       {[...Array(8)].map((_, i) => (
         <motion.div
@@ -110,6 +320,7 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
             position: 'absolute',
             fontSize: '28px',
             pointerEvents: 'none',
+            zIndex: 1,
           }}
         >
           {season.emoji}
@@ -119,8 +330,12 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
       {/* Clean season card */}
       <motion.div
         key={currentSeason}
-        initial={{ scale: 0.85, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        initial={{ scale: 0.85, opacity: 0, rotateY: -10 }}
+        animate={{ 
+          scale: 1, 
+          opacity: 1,
+          rotateY: cameraAngle / 4 // Subtle 3D rotation effect
+        }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
         style={{
@@ -130,6 +345,8 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
           backgroundColor: '#ffffff',
           borderRadius: '24px',
           boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)',
+          zIndex: 2,
+          perspective: '1000px',
         }}
       >
         <motion.div
@@ -176,6 +393,20 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
           }}
         >
           {season.subtitle}
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          style={{
+            fontSize: '14px',
+            fontWeight: '500',
+            color: '#94a3b8',
+            marginTop: '12px',
+          }}
+        >
+          {season.description}
         </motion.p>
 
         {/* Simple progress bar */}

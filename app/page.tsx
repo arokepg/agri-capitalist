@@ -7,6 +7,7 @@ import GameUI from '@/components/GameUI';
 import ShopSidebar from '@/components/ShopSidebar';
 import BalanceSheetModal from '@/components/BalanceSheetModal';
 import StockTicker from '@/components/StockTicker';
+import LiveStocksTicker from '@/components/LiveStocksTicker';
 import InspectionModal from '@/components/InspectionModal';
 import HowToPlayModal from '@/components/HowToPlayModal';
 import YearReportModal from '@/components/YearReportModal';
@@ -43,6 +44,7 @@ export default function Home() {
         <GameCanvas />
         <GameUI />
         <StockTicker />
+        <LiveStocksTicker />
       </div>
 
       {/* Shop Sidebar */}

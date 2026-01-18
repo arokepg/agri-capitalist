@@ -48,6 +48,17 @@ export default function GameCanvas() {
   const [ready, setReady] = useState(false);
   const [centerOffset, setCenterOffset] = useState(0);
   const setIsDragging = useGameStore(state => state.setIsDragging);
+  const interactionMode = useGameStore(state => state.interactionMode);
+
+  // Determine cursor class based on interaction mode
+  const getCursorClass = () => {
+    switch (interactionMode) {
+      case 'PLANT': return 'cursor-plant';
+      case 'RENOVATE': return 'cursor-renovate';
+      case 'SELL': return 'cursor-sell';
+      default: return '';
+    }
+  };
 
   // Global pointer up handler to stop drag-to-plant
   useEffect(() => {
@@ -74,7 +85,7 @@ export default function GameCanvas() {
   }, []);
 
   return (
-    <div style={{ position: 'absolute', inset: 0 }}>
+    <div style={{ position: 'absolute', inset: 0 }} className={getCursorClass()}>
       <Canvas
         orthographic
         camera={{
