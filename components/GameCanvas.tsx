@@ -49,6 +49,8 @@ export default function GameCanvas() {
   const [centerOffset, setCenterOffset] = useState(0);
   const setIsDragging = useGameStore(state => state.setIsDragging);
   const interactionMode = useGameStore(state => state.interactionMode);
+  const isDragging = useGameStore(state => state.isDragging);
+  const armedItem = useGameStore(state => state.armedItem);
 
   // Determine cursor class based on interaction mode
   const getCursorClass = () => {
@@ -136,7 +138,7 @@ export default function GameCanvas() {
         <OrbitControls
           enablePan={true}
           enableZoom={true}
-          enableRotate={true}
+          enableRotate={!isDragging && !armedItem} // Disable rotation when dragging or armed
           enableDamping={true}
           dampingFactor={0.05}
           minZoom={30}

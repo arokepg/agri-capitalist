@@ -763,39 +763,46 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (tile.type === 'EMPTY') return;
     
     let refund = 0;
+    const refundRate = 0.7; // 70% refund
     
-    // Calculate 70% refund based on asset type
-    if (tile.type === 'CROP') {
-      if (tile.content === 'corn') refund = 50 * 0.7;
-      if (tile.content === 'wheat') refund = 100 * 0.7;
-      if (tile.content === 'coffee') refund = 300 * 0.7;
-      if (tile.content === 'cotton') refund = 200 * 0.7;
-    } else if (tile.type === 'LIVESTOCK') {
-      if (tile.content === 'chicken') refund = tile.livestockCount * 20 * 0.7;
-      if (tile.content === 'pig') refund = tile.livestockCount * 150 * 0.7;
-      if (tile.content === 'cow') refund = tile.livestockCount * 500 * 0.7;
-      if (tile.content === 'sheep') refund = tile.livestockCount * 250 * 0.7;
-    } else if (tile.type === 'STRUCTURE') {
-      if (tile.content === 'well') refund = 800 * 0.7;
-      if (tile.content === 'fence') refund = 400 * 0.7;
-      if (tile.content === 'silo') refund = 1200 * 0.7;
+    // Calculate refund based on asset type
+    if (tile.type === 'CROP' && tile.content) {
+      // New crops
+      if (CROP_DATA[tile.content]) {
+        refund = CROP_DATA[tile.content].cost * refundRate;
+      }
+      // Legacy crops
+      else if (tile.content === 'corn') refund = 50 * refundRate;
+      else if (tile.content === 'wheat') refund = 100 * refundRate;
+      else if (tile.content === 'coffee') refund = 300 * refundRate;
+      else if (tile.content === 'cotton') refund = 200 * refundRate;
+    } else if (tile.type === 'LIVESTOCK' && tile.content) {
+      // New animals
+      if (ANIMAL_DATA[tile.content]) {
+        refund = ANIMAL_DATA[tile.content].cost * refundRate * tile.livestockCount;
+      }
+      // Legacy animals
+      else if (tile.content === 'chicken') refund = tile.livestockCount * 20 * refundRate;
+      else if (tile.content === 'pig') refund = tile.livestockCount * 150 * refundRate;
+      else if (tile.content === 'cow') refund = tile.livestockCount * 500 * refundRate;
+      else if (tile.content === 'sheep') refund = tile.livestockCount * 250 * refundRate;
+    } else if (tile.type === 'STRUCTURE' && tile.content) {
+      // New structures
+      if (STRUCTURE_DATA[tile.content]) {
+        refund = STRUCTURE_DATA[tile.content].cost * refundRate;
+      }
+      // Legacy structures
+      else if (tile.content === 'well') refund = 800 * refundRate;
+      else if (tile.content === 'fence') refund = 400 * refundRate;
+      else if (tile.content === 'silo') refund = 1200 * refundRate;
+      else if (tile.content === 'barn') refund = 1000 * refundRate;
+      else if (tile.content === 'comm_tower') refund = 900 * refundRate;
+      else if (tile.content === 'paved_road') refund = 500 * refundRate;
       
       // Update building value
-      const buildingValueLoss = refund / 0.7;
+      const buildingValueLoss = refund / refundRate;
       set({ buildingValue: Math.max(0, state.buildingValue - buildingValueLoss) });
-      } else if (tile.type === 'STRUCTURE') {
-        const hasRoadBoost = state.grid.some(t => t.type === 'STRUCTURE' && t.content === 'paved_road');
-        const refundRate = hasRoadBoost ? 0.85 : 0.7;
-        if (tile.content === 'well') refund = 800 * refundRate;
-        if (tile.content === 'fence') refund = 400 * refundRate;
-        if (tile.content === 'silo') refund = 1200 * refundRate;
-        if (tile.content === 'barn') refund = 1000 * refundRate;
-        if (tile.content === 'comm_tower') refund = 900 * refundRate;
-        if (tile.content === 'paved_road') refund = 500 * refundRate;
-      
-        const buildingValueLoss = refund / refundRate;
-        set({ buildingValue: Math.max(0, state.buildingValue - buildingValueLoss) });
-      }
+    }
     
     // Clear the tile and add refund to cash
     const newGrid = [...state.grid];
