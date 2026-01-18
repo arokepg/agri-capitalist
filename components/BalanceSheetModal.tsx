@@ -1,5 +1,6 @@
 'use client';
 
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '@/store/GameStore';
 import { WarningIcon, CoinIcon, CalendarIcon } from './FinancialIconSet';
 import { XIcon } from './IconLibrary';
@@ -21,21 +22,35 @@ export default function BalanceSheetModal() {
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0,0,0,0.75)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000,
-      padding: '24px',
-      backdropFilter: 'blur(12px)'
-    }}>
-      <div style={{
+    <AnimatePresence>
+      {showBalanceSheet && balanceSheet && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={closeBalanceSheet}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+            padding: '24px',
+            backdropFilter: 'blur(12px)'
+          }}
+        >
+          <motion.div
+            initial={{ scale: 0.8, y: 50, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            onClick={(e) => e.stopPropagation()}
+            style={{
         backgroundColor: 'rgba(248, 250, 252, 0.95)',
         backdropFilter: 'blur(20px)',
         borderRadius: '20px',
@@ -467,7 +482,9 @@ export default function BalanceSheetModal() {
             </button>
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

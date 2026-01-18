@@ -76,11 +76,10 @@ interface GameState {
   // Investments
   goldHoldings: number;
   dollarHoldings: number;
-  stocksHoldings: number;
   
-  // Insurance
+  // Insurance (v6.0)
   hasCropInsurance: boolean;
-  insuranceType: 'none' | 'oneTime' | 'annual';
+  insuranceType: 'none' | 'lifetime' | 'annual';
   
   // Events
   currentEvent: GameEvent | null;
@@ -154,9 +153,7 @@ interface GameState {
   sellGold: (amount: number) => void;
   buyDollar: (amount: number) => void;
   sellDollar: (amount: number) => void;
-  buyStocks: (amount: number) => void;
-  sellStocks: (amount: number) => void;
-  buyCropInsurance: (type: 'oneTime' | 'annual') => void;
+  buyCropInsurance: (type: 'lifetime' | 'annual') => void;
   hasStructureUnlocked: (structureId: string) => boolean;
 }
 
@@ -201,7 +198,6 @@ export const useGameStore = create<GameState>((set, get) => ({
   stockHoldings: {},
   goldHoldings: 0,
   dollarHoldings: 0,
-  stocksHoldings: 0,
   hasCropInsurance: false,
   insuranceType: 'none',
   currentEvent: null,
@@ -265,7 +261,6 @@ export const useGameStore = create<GameState>((set, get) => ({
       stockHoldings: {},
       goldHoldings: 0,
       dollarHoldings: 0,
-      stocksHoldings: 0,
       currentEvent: null,
       cropYieldMultiplier: 1,
       sellPriceMultiplier: 1,
@@ -944,37 +939,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
   },
 
-  buyStocks: (amount: number) => {
+  buyCropInsurance: (type: 'lifetime' | 'annual') => {
     const state = get();
-    const stocksAsset = state.marketState.assets.stocks;
-    const currentPrice = stocksAsset?.currentPrice || 5000;
-    const cost = amount * currentPrice;
-    
-    if (state.cash >= cost) {
-      set({
-        cash: state.cash - cost,
-        stocksHoldings: state.stocksHoldings + amount
-      });
-    }
-  },
-
-  sellStocks: (amount: number) => {
-    const state = get();
-    const stocksAsset = state.marketState.assets.stocks;
-    const currentPrice = stocksAsset?.currentPrice || 5000;
-
-    if (state.stocksHoldings >= amount) {
-      const revenue = amount * currentPrice;
-      set({
-        cash: state.cash + revenue,
-        stocksHoldings: state.stocksHoldings - amount
-      });
-    }
-  },
-
-  buyCropInsurance: (type: 'oneTime' | 'annual') => {
-    const state = get();
-    const cost = type === 'oneTime' ? 8000 : 1000;
+    const cost = type === 'lifetime' ? 8000 : 1000;
 
     if (state.cash >= cost) {
       set({

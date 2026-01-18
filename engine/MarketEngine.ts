@@ -27,7 +27,7 @@ export class MarketEngine {
       id: 'gold',
       name: 'Gold',
       symbol: 'XAU',
-      currentPrice: 8000,  // v5.8: 8000k
+      currentPrice: 8000,  // v6.0: 8000k
       basePrice: 8000,
       volatility: 0.03, // Low volatility, safe haven
       history: [8000],
@@ -38,23 +38,12 @@ export class MarketEngine {
       id: 'usd',
       name: 'US Dollar',
       symbol: 'USD',
-      currentPrice: 2500,  // v5.8: 2500k
+      currentPrice: 2500,  // v6.0: 2500k
       basePrice: 2500,
       volatility: 0.06, // Moderate volatility, exchange rate fluctuations
       history: [2500],
       description: 'United States Dollar - moderate volatility reflecting global exchange trends',
       type: 'currency'
-    },
-    stocks: {
-      id: 'stocks',
-      name: 'Stocks',
-      symbol: 'STK',
-      currentPrice: 5000,
-      basePrice: 5000,
-      volatility: 0.15, // High volatility
-      history: [5000],
-      description: 'Dynamic stock market investment - high volatility with potential high returns',
-      type: 'commodity'
     }
   };
 

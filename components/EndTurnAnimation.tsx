@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import MonthFlipCalendar from './MonthFlipCalendar';
+import FourSeasonCycle from './FourSeasonCycle';
 
 interface EndTurnAnimationProps {
   isVisible: boolean;
@@ -9,5 +9,5 @@ interface EndTurnAnimationProps {
 }
 
 export default function EndTurnAnimation({ isVisible, onComplete }: EndTurnAnimationProps) {
-  return <MonthFlipCalendar isActive={isVisible} onComplete={onComplete} />;
+  return <FourSeasonCycle isActive={isVisible} onComplete={onComplete} />;
 }

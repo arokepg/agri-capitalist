@@ -52,7 +52,6 @@ export default function ShopSidebar() {
   const hasStructureUnlocked = useGameStore(state => state.hasStructureUnlocked);
   const goldHoldings = useGameStore(state => state.goldHoldings);
   const dollarHoldings = useGameStore(state => state.dollarHoldings);
-  const stockHoldings = useGameStore(state => state.stockHoldings);
   const marketState = useGameStore(state => state.marketState);
   
   const armCursor = useGameStore(state => state.armCursor);
@@ -62,21 +61,16 @@ export default function ShopSidebar() {
   const sellGold = useGameStore(state => state.sellGold);
   const buyDollar = useGameStore(state => state.buyDollar);
   const sellDollar = useGameStore(state => state.sellDollar);
-  const buyStock = useGameStore(state => state.buyStock);
-  const sellStock = useGameStore(state => state.sellStock);
 
   const filteredItems = SHOP_ITEMS.filter(item => item.category === activeTab);
   
-  // Get gold, USD, and stocks prices from MarketEngine
+  // Get gold and USD prices from MarketEngine
   const goldAsset = marketState.assets.gold;
   const usdAsset = marketState.assets.usd;
-  const stocksAsset = marketState.assets.stocks;
   const currentGoldPrice = goldAsset?.currentPrice || 8000;
   const currentDollarPrice = usdAsset?.currentPrice || 2500;
-  const currentStocksPrice = stocksAsset?.currentPrice || 5000;
   const goldPriceHistory = goldAsset?.history || [8000];
   const dollarPriceHistory = usdAsset?.history || [2500];
-  const stocksPriceHistory = stocksAsset?.history || [5000];
 
   const formatCurrency = (value: number) => {
     return `$${value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
@@ -638,12 +632,12 @@ export default function ShopSidebar() {
             </div>
           </div>
           
-          {/* Stocks Investment */}
+          {/* Crop Insurance (v6.0) */}
           <div style={{
             padding: '16px',
             ...glassStyle,
             borderRadius: '12px',
-            border: '2px solid #8b5cf6'
+            border: '2px solid #3b82f6'
           }}>
             <h3 style={{ 
               fontSize: '16px', 
@@ -651,90 +645,50 @@ export default function ShopSidebar() {
               marginBottom: '8px',
               color: '#0f172a'
             }}>
-              📈 Stocks
+              🛡️ Crop Insurance
             </h3>
-            <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '12px' }}>
-              Holdings: {stockHoldings['stocks'] || 0} shares | Price: {formatCurrency(currentStocksPrice)}/share
+            <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '12px', lineHeight: '1.5' }}>
+              {hasCropInsurance ? (
+                <span style={{ color: '#22c55e', fontWeight: '600' }}>
+                  ✅ Active ({insuranceType === 'lifetime' ? 'Lifetime' : 'Annual'})
+                </span>
+              ) : (
+                <span>Protects against crop failures. Pays 50-70% of losses.</span>
+              )}
             </div>
             
-            {/* Interactive Line Graph */}
-            <div style={{
-              height: '60px',
-              position: 'relative',
-              marginBottom: '12px',
-              padding: '8px',
-              backgroundColor: 'rgba(0,0,0,0.05)',
-              borderRadius: '6px'
-            }}>
-              <svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="stocksGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3"/>
-                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0"/>
-                  </linearGradient>
-                </defs>
-                {stocksPriceHistory.length > 1 && (() => {
-                  const prices = stocksPriceHistory.slice(-12);
-                  const maxPrice = Math.max(...prices);
-                  const minPrice = Math.min(...prices);
-                  const range = maxPrice - minPrice || 1;
-                  const points = prices.map((price, i) => {
-                    const x = (i / (prices.length - 1)) * 100;
-                    const y = 40 - ((price - minPrice) / range) * 35;
-                    return `${x},${y}`;
-                  }).join(' ');
-                  const areaPoints = `0,40 ${points} 100,40`;
-                  return (
-                    <>
-                      <polygon points={areaPoints} fill="url(#stocksGradient)"/>
-                      <polyline
-                        points={points}
-                        fill="none"
-                        stroke="#8b5cf6"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </>
-                  );
-                })()}
-              </svg>
-            </div>
-            
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <button
-                onClick={() => buyStock('stocks', 1)}
-                disabled={cash < currentStocksPrice}
+                onClick={() => buyCropInsurance('lifetime')}
+                disabled={hasCropInsurance || cash < 8000}
                 style={{
-                  flex: 1,
                   padding: '10px',
-                  backgroundColor: cash >= currentStocksPrice ? '#8b5cf6' : '#cbd5e1',
+                  backgroundColor: (!hasCropInsurance && cash >= 8000) ? '#3b82f6' : '#cbd5e1',
                   border: 'none',
                   borderRadius: '8px',
                   color: '#fff',
                   fontSize: '12px',
                   fontWeight: '700',
-                  cursor: cash >= currentStocksPrice ? 'pointer' : 'not-allowed'
+                  cursor: (!hasCropInsurance && cash >= 8000) ? 'pointer' : 'not-allowed'
                 }}
               >
-                BUY 1
+                BUY LIFETIME - $8,000
               </button>
               <button
-                onClick={() => sellStock('stocks', 1)}
-                disabled={(stockHoldings['stocks'] || 0) < 1}
+                onClick={() => buyCropInsurance('annual')}
+                disabled={hasCropInsurance || cash < 1000}
                 style={{
-                  flex: 1,
                   padding: '10px',
-                  backgroundColor: (stockHoldings['stocks'] || 0) >= 1 ? '#ef4444' : '#cbd5e1',
+                  backgroundColor: (!hasCropInsurance && cash >= 1000) ? '#06b6d4' : '#cbd5e1',
                   border: 'none',
                   borderRadius: '8px',
                   color: '#fff',
                   fontSize: '12px',
                   fontWeight: '700',
-                  cursor: (stockHoldings['stocks'] || 0) >= 1 ? 'pointer' : 'not-allowed'
+                  cursor: (!hasCropInsurance && cash >= 1000) ? 'pointer' : 'not-allowed'
                 }}
               >
-                SELL 1
+                BUY ANNUAL - $1,000
               </button>
             </div>
           </div>

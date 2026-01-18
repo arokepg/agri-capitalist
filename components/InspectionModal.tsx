@@ -218,9 +218,9 @@ export default function InspectionModal({
           >
             {/* Modal Container */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
+              initial={{ scale: 0.8, y: 50, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
               onClick={(e) => e.stopPropagation()}
               style={{
