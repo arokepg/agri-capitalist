@@ -192,7 +192,7 @@ const INTEGRITY_PROFIT_BOOST = 5; // 5% increase per profitable year
 export const useGameStore = create<GameState>((set, get) => ({
   // Initial State
   year: 1,
-  cash: 10, // v5.8: Start with 10k
+  cash: 10000, // v5.8: Start with 10k
   integrity: 100,
   grid: [],
   gridSize: 5,
@@ -258,7 +258,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({
       grid: initialGrid,
       year: 1,
-      cash: 10,
+      cash: 10000,
       integrity: 100,
       gameOver: false,
       isDrought: false,
