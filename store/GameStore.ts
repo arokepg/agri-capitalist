@@ -668,11 +668,12 @@ export const useGameStore = create<GameState>((set, get) => ({
       ? state.buildingValue + price 
       : state.buildingValue;
     
+    // v6.3: PERSISTENT CURSOR - Keep armed item after placement for multi-planting
     set({
       grid: newGrid,
       cash: state.cash - price,
-      buildingValue: newBuildingValue,
-      armedItem: null // Clear armed item after placement
+      buildingValue: newBuildingValue
+      // armedItem stays active for continuous planting
     });
   },
 

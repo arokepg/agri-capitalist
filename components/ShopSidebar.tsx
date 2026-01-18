@@ -213,14 +213,23 @@ export default function ShopSidebar() {
               letterSpacing: '0.5px',
               marginBottom: '4px'
             }}>
-              READY TO PLACE
+              🎯 ARMED & READY
             </div>
             <div style={{ 
               fontSize: '14px', 
               fontWeight: '700',
-              color: '#0f172a'
+              color: '#0f172a',
+              marginBottom: '4px'
             }}>
               {armedItem.name}
+            </div>
+            <div style={{
+              fontSize: '9px',
+              color: '#64748b',
+              fontWeight: '600',
+              fontStyle: 'italic'
+            }}>
+              Click tiles to place multiple times
             </div>
           </div>
           <button
@@ -634,7 +643,7 @@ export default function ShopSidebar() {
         lineHeight: '1.6',
         textAlign: 'center'
       }}>
-        <strong>Click</strong> an item to arm your cursor, then <strong>click a tile</strong> to place.
+        <strong>Click</strong> an item to arm your cursor. <strong>Click or drag</strong> tiles to place multiple times. Click <strong>CANCEL</strong> to unarm.
       </div>
     </div>
   );

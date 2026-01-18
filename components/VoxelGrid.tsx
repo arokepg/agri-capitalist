@@ -238,6 +238,10 @@ function VoxelTile({ x, z, type, content, health, livestockCount, isDrought }: V
     if (interactionMode === 'PLANT' && armedItem && canPlaceItem()) {
       setIsDragging(true);
       handleClick();
+    } else if (interactionMode === 'SELL' && type !== 'EMPTY') {
+      // v6.3: Drag-to-delete for SELL mode
+      setIsDragging(true);
+      handleClick();
     }
   };
 
@@ -246,6 +250,9 @@ function VoxelTile({ x, z, type, content, health, livestockCount, isDrought }: V
     // Drag-to-plant: If dragging and can place, plant immediately
     if (isDragging && interactionMode === 'PLANT' && armedItem && canPlaceItem()) {
       placeArmedItem(x, z);
+    } else if (isDragging && interactionMode === 'SELL' && type !== 'EMPTY') {
+      // v6.3: Drag-to-delete for SELL mode
+      liquidateAsset(x, z);
     }
   };
 
