@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #ADD8E6;
+  overflow: hidden;
+}
+
+/* Custom Elegant Scrollbar - v3.1 Spec */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Optional: explicit class for scroll containers (modals, panels) */
+.elegant-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 transparent;
+}
+
+.elegant-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.elegant-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.elegant-scrollbar::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 10px;
+}
+
+.elegant-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 transparent;
+}
+
+/* Light Mode, Cheerful Color Palette */
+:root {
+  --grass-green: #7FFF00;
+  --grass-dark: #6BCF00;
+  --water-turquoise: #40E0D0;
+  --wheat-yellow: #FFD700;
+  --dirt-tan: #D2B48C;
+  --sky-blue: #87CEEB;
+  --shadow-soft: rgba(0, 0, 0, 0.15);
+  --ui-white: #FFFFFF;
+  --ui-light-gray: #F5F5F5;
+  --text-dark: #2C3E50;
+  --accent-green: #4CAF50;
+  --accent-red: #FF5252;
+  --accent-yellow: #FFC107;
+}

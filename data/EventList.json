@@ -1,0 +1,178 @@
+{
+  "events": [
+    {
+      "id": "sugarcane_fail",
+      "type": "CROP_FAILURE",
+      "name": "Sugarcane Harvest Fail",
+      "description": "Disease wipes out the entire sugarcane harvest. Crop insurance can prevent this loss.",
+      "probability": 0.08,
+      "effects": {
+        "cropFailure": "sugarcane",
+        "integrity": -5,
+        "insuranceProtected": true
+      }
+    },
+    {
+      "id": "rice_fail",
+      "type": "CROP_FAILURE",
+      "name": "Rice Harvest Fail",
+      "description": "Pests destroy the paddy rice crop completely. Insurance holders are protected.",
+      "probability": 0.08,
+      "effects": {
+        "cropFailure": "paddyRice",
+        "integrity": -5,
+        "insuranceProtected": true
+      }
+    },
+    {
+      "id": "dragonfruit_fail",
+      "type": "CROP_FAILURE",
+      "name": "Dragon Fruit Harvest Fail",
+      "description": "Fungal infection ruins all dragon fruit plants. Insured farmers receive compensation.",
+      "probability": 0.07,
+      "effects": {
+        "cropFailure": "dragonFruit",
+        "integrity": -5,
+        "insuranceProtected": true
+      }
+    },
+    {
+      "id": "durian_fail",
+      "type": "CROP_FAILURE",
+      "name": "Durian Harvest Fail",
+      "description": "Extreme weather destroys the valuable durian harvest. Insurance covers the loss.",
+      "probability": 0.06,
+      "effects": {
+        "cropFailure": "durian",
+        "integrity": -8,
+        "insuranceProtected": true
+      }
+    },
+    {
+      "id": "polluted_pond",
+      "type": "ENVIRONMENTAL",
+      "name": "Polluted Pond",
+      "description": "Chemical runoff contaminates your pond. All fish and shrimp die.",
+      "probability": 0.09,
+      "effects": {
+        "animalLoss": ["fish", "shrimp"],
+        "integrity": -10,
+        "cashLoss": 500
+      }
+    },
+    {
+      "id": "animal_disease",
+      "type": "ENVIRONMENTAL",
+      "name": "Animal Disease Outbreak",
+      "description": "Contagious disease spreads through your farm. All ducks and pigs perish.",
+      "probability": 0.09,
+      "effects": {
+        "animalLoss": ["duck", "pig"],
+        "integrity": -10,
+        "cashLoss": 600
+      }
+    },
+    {
+      "id": "extreme_drought",
+      "type": "ENVIRONMENTAL",
+      "name": "Extreme Drought",
+      "description": "Severe water shortage reduces all crop yields to 70% of normal.",
+      "probability": 0.10,
+      "effects": {
+        "cropYieldMultiplier": 0.7,
+        "visualFeedback": "drought",
+        "integrity": -8
+      }
+    },
+    {
+      "id": "saltwater_intrusion",
+      "type": "ENVIRONMENTAL",
+      "name": "Saltwater Intrusion",
+      "description": "Rising sea levels bring saltwater inland. Rice, fish, and shrimp yields drop to 60%.",
+      "probability": 0.08,
+      "effects": {
+        "specificCropMultiplier": {
+          "paddyRice": 0.6,
+          "fish": 0.6,
+          "shrimp": 0.6
+        },
+        "integrity": -7
+      }
+    },
+    {
+      "id": "government_support",
+      "type": "POLICY_BUFF",
+      "name": "Government Agricultural Support",
+      "description": "New subsidies boost all crop profits by 25%. A rare positive policy!",
+      "probability": 0.07,
+      "effects": {
+        "cropYieldMultiplier": 1.25,
+        "integrity": 5,
+        "cashGain": 1000
+      }
+    },
+    {
+      "id": "high_export_demand",
+      "type": "MARKET_BUFF",
+      "name": "High Export Demand",
+      "description": "International markets boom! All agricultural yields increase by 25%.",
+      "probability": 0.08,
+      "effects": {
+        "cropYieldMultiplier": 1.25,
+        "livestockMultiplier": 1.25,
+        "integrity": 3
+      }
+    },
+    {
+      "id": "successful_shrimp_harvest",
+      "type": "MARKET_BUFF",
+      "name": "Successful Shrimp Season",
+      "description": "Perfect conditions and high demand! Shrimp profits soar by 50%.",
+      "probability": 0.06,
+      "effects": {
+        "specificCropMultiplier": {
+          "shrimp": 1.5
+        },
+        "integrity": 5
+      }
+    },
+    {
+      "id": "trade_restrictions",
+      "type": "POLICY_DEBUFF",
+      "name": "Trade Restrictions Imposed",
+      "description": "New export regulations reduce dragon fruit, shrimp, and durian yields by 25%.",
+      "probability": 0.09,
+      "effects": {
+        "specificCropMultiplier": {
+          "dragonFruit": 0.75,
+          "shrimp": 0.75,
+          "durian": 0.75
+        },
+        "integrity": -5
+      }
+    },
+    {
+      "id": "good_weather",
+      "type": "FORTUNE",
+      "name": "Perfect Weather",
+      "description": "Ideal conditions throughout the year boost all yields by 15%.",
+      "probability": 0.10,
+      "effects": {
+        "cropYieldMultiplier": 1.15,
+        "livestockMultiplier": 1.1,
+        "integrity": 5,
+        "visualFeedback": "sunshine"
+      }
+    },
+    {
+      "id": "normal_year",
+      "type": "NEUTRAL",
+      "name": "Normal Year",
+      "description": "A steady, uneventful year. Sometimes boring is good.",
+      "probability": 0.15,
+      "effects": {
+        "integrity": 0
+      }
+    }
+  ]
+}
