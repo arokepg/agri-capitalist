@@ -209,8 +209,8 @@ export default function StockExchangeModal({ isOpen, onClose }: StockExchangeMod
 
               return (
                 <div
-                  key={asset.id}
-                  onClick={() => setSelectedAsset(asset.id)}
+                  key={stock.id}
+                  onClick={() => setSelectedAsset(stock.id)}
                   style={{
                     padding: '20px',
                     ...glassStyle,
@@ -239,14 +239,14 @@ export default function StockExchangeModal({ isOpen, onClose }: StockExchangeMod
                         color: '#0f172a',
                         marginBottom: '4px'
                       }}>
-                        {asset.symbol}
+                        {stock.symbol}
                       </div>
                       <div style={{
                         fontSize: '11px',
                         color: '#64748b',
                         fontWeight: '500'
                       }}>
-                        {asset.name}
+                        {stock.name}
                       </div>
                     </div>
                     <div style={{
@@ -254,7 +254,7 @@ export default function StockExchangeModal({ isOpen, onClose }: StockExchangeMod
                       fontWeight: '700',
                       color: '#0f172a'
                     }}>
-                      {formatCurrency(asset.currentPrice)}
+                      {formatCurrency(stock.currentPrice)}
                     </div>
                   </div>
 
