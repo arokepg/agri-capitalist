@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { AnimatePresence, motion } from 'framer-motion';
 import VoxelGrid from './VoxelGrid';
+import { useGameStore } from '@/store/GameStore';
 import * as THREE from 'three';
 
 // v4.4 SPEC: Full-screen canvas (100vw × 100vh) with light blue background (#ADD8E6)
@@ -46,6 +47,16 @@ function CameraIntro() {
 export default function GameCanvas() {
   const [ready, setReady] = useState(false);
   const [centerOffset, setCenterOffset] = useState(0);
+  const setIsDragging = useGameStore(state => state.setIsDragging);
+
+  // Global pointer up handler to stop drag-to-plant
+  useEffect(() => {
+    const handlePointerUp = () => {
+      setIsDragging(false);
+    };
+    window.addEventListener('pointerup', handlePointerUp);
+    return () => window.removeEventListener('pointerup', handlePointerUp);
+  }, [setIsDragging]);
 
   useLayoutEffect(() => {
     const updateOffsets = () => {

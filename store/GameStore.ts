@@ -68,6 +68,7 @@ interface GameState {
   
   // Visual State
   isDrought: boolean;
+  isDragging: boolean; // v6.1: Drag-to-plant brush mode
   
   // Market & Trading
   marketState: MarketState;
@@ -139,6 +140,7 @@ interface GameState {
   liquidateAsset: (x: number, z: number) => void; // Sell mechanic: 70% refund
   renovateAsset: (x: number, z: number) => void; // v2.0: Upgrade structures
   setInteractionMode: (mode: 'PLANT' | 'SELL' | 'RENOVATE') => void; // v2.0: Added RENOVATE
+  setIsDragging: (isDragging: boolean) => void; // v6.1: Drag-to-plant brush
   handleCorruptionChoice: (accept: boolean) => void;
   calculateBalanceSheet: () => BalanceSheet;
   closeBalanceSheet: () => void;
@@ -194,6 +196,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   grid: [],
   gridSize: 5,
   isDrought: false,
+  isDragging: false,
   marketState: marketEngine.getMarketState(),
   stockHoldings: {},
   goldHoldings: 0,
@@ -741,6 +744,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   setInteractionMode: (mode: 'PLANT' | 'SELL' | 'RENOVATE') => {
     set({ interactionMode: mode, armedItem: null });
+  },
+
+  setIsDragging: (isDragging: boolean) => {
+    set({ isDragging });
   },
 
   liquidateAsset: (x: number, z: number) => {

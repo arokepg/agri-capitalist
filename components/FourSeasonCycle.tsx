@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface FourSeasonCycleProps {
   isActive: boolean;
@@ -10,36 +10,36 @@ interface FourSeasonCycleProps {
 
 type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
-const SEASON_DURATION = 1750; // 1.75s per season
+const SEASON_DURATION = 2000; // 2s per season (8s total)
 
 const seasonData = {
   spring: {
     name: 'Spring',
-    subtitle: 'Trồng Trọt (Planting)',
+    subtitle: 'Mùa Xuân',
     emoji: '🌸',
-    bgGradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-    particles: '🌱🌿🌷',
+    bg: 'linear-gradient(180deg, #fef3c7 0%, #fde68a 100%)',
+    color: '#0f172a',
   },
   summer: {
     name: 'Summer',
-    subtitle: 'Sinh Trưởng (Growing)',
+    subtitle: 'Mùa Hạ',
     emoji: '☀️',
-    bgGradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-    particles: '☀️🔥💧',
+    bg: 'linear-gradient(180deg, #fed7aa 0%, #fdba74 100%)',
+    color: '#0f172a',
   },
   autumn: {
     name: 'Autumn',
-    subtitle: 'Thu Hoạch (Harvest)',
+    subtitle: 'Mùa Thu',
     emoji: '🍂',
-    bgGradient: 'linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%)',
-    particles: '🍂🍁🌾',
+    bg: 'linear-gradient(180deg, #fca5a5 0%, #f87171 100%)',
+    color: '#ffffff',
   },
   winter: {
     name: 'Winter',
-    subtitle: 'Mùa Nước Nổi (Flood Season)',
+    subtitle: 'Mùa Nước Nổi',
     emoji: '💧',
-    bgGradient: 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
-    particles: '💧🌊❄️',
+    bg: 'linear-gradient(180deg, #bfdbfe 0%, #93c5fd 100%)',
+    color: '#0f172a',
   },
 };
 
@@ -58,8 +58,7 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
       if (currentSeasonIndex < 3) {
         setCurrentSeasonIndex((prev) => prev + 1);
       } else {
-        // All 4 seasons complete
-        onComplete();
+        setTimeout(() => onComplete(), 300);
       }
     }, SEASON_DURATION);
 
@@ -69,13 +68,14 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
   if (!isActive) return null;
 
   const season = seasonData[currentSeason];
+  const progress = ((currentSeasonIndex + 1) / 4) * 100;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
       style={{
         position: 'fixed',
         inset: 0,
@@ -83,71 +83,67 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: season.bgGradient,
-        overflow: 'hidden',
+        background: season.bg,
       }}
     >
-      {/* Animated Particles */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: -50,
-              opacity: 0,
-            }}
-            animate={{
-              y: window.innerHeight + 50,
-              opacity: [0, 1, 1, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              delay: Math.random() * 1.5,
-              ease: 'linear',
-            }}
-            style={{
-              position: 'absolute',
-              fontSize: '32px',
-              pointerEvents: 'none',
-            }}
-          >
-            {season.particles[Math.floor(Math.random() * season.particles.length)]}
-          </motion.div>
-        ))}
-      </div>
+      {/* Simple floating particles - only 8 per season */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{
+            x: `${20 + i * 15}%`,
+            y: '-10%',
+            opacity: 0,
+            scale: 0.5,
+          }}
+          animate={{
+            y: '110%',
+            opacity: [0, 1, 1, 0],
+            scale: [0.5, 1, 1, 0.5],
+          }}
+          transition={{
+            duration: 4,
+            delay: i * 0.3,
+            ease: 'linear',
+          }}
+          style={{
+            position: 'absolute',
+            fontSize: '28px',
+            pointerEvents: 'none',
+          }}
+        >
+          {season.emoji}
+        </motion.div>
+      ))}
 
-      {/* Season Card */}
+      {/* Clean season card */}
       <motion.div
-        initial={{ scale: 0.8, y: 50, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.9, y: 20, opacity: 0 }}
-        transition={{
-          type: 'spring',
-          stiffness: 300,
-          damping: 20,
-        }}
+        key={currentSeason}
+        initial={{ scale: 0.85, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
         style={{
           position: 'relative',
-          zIndex: 10,
           textAlign: 'center',
-          padding: '48px 64px',
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          padding: '64px 96px',
+          backgroundColor: '#ffffff',
           borderRadius: '24px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          border: '2px solid rgba(255, 255, 255, 0.8)',
+          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)',
         }}
       >
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
+          initial={{ scale: 0, rotate: -45 }}
+          animate={{ scale: 1, rotate: 0 }}
           transition={{
-            scale: { delay: 0.2, type: 'spring', stiffness: 500, damping: 15 },
-            rotate: { delay: 0.4, duration: 0.6, ease: 'easeInOut' },
+            delay: 0.1,
+            type: 'spring',
+            stiffness: 400,
+            damping: 20,
           }}
           style={{
             fontSize: '96px',
-            marginBottom: '16px',
+            marginBottom: '24px',
           }}
         >
           {season.emoji}
@@ -156,9 +152,9 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
           style={{
-            fontSize: '48px',
+            fontSize: '56px',
             fontWeight: '900',
             color: '#0f172a',
             marginBottom: '8px',
@@ -169,12 +165,12 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
         </motion.h2>
         
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
           style={{
-            fontSize: '18px',
-            fontWeight: '500',
+            fontSize: '20px',
+            fontWeight: '600',
             color: '#64748b',
             fontStyle: 'italic',
           }}
@@ -182,21 +178,21 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
           {season.subtitle}
         </motion.p>
 
-        {/* Progress Indicator */}
+        {/* Simple progress bar */}
         <div style={{
+          marginTop: '40px',
           display: 'flex',
-          gap: '8px',
+          gap: '10px',
           justifyContent: 'center',
-          marginTop: '32px',
         }}>
           {seasons.map((_, idx) => (
             <div
               key={idx}
               style={{
-                width: '40px',
-                height: '4px',
-                borderRadius: '2px',
-                backgroundColor: idx <= currentSeasonIndex ? '#0f172a' : '#cbd5e1',
+                width: idx <= currentSeasonIndex ? '50px' : '50px',
+                height: '5px',
+                borderRadius: '3px',
+                backgroundColor: idx <= currentSeasonIndex ? '#0f172a' : '#e2e8f0',
                 transition: 'background-color 0.3s ease',
               }}
             />
@@ -204,49 +200,23 @@ export default function FourSeasonCycle({ isActive, onComplete }: FourSeasonCycl
         </div>
       </motion.div>
 
-      {/* Special Season Effects */}
-      {currentSeason === 'summer' && (
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{
-            scale: [0.8, 1.2, 0.8],
-            opacity: [0, 0.6, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          style={{
-            position: 'absolute',
-            top: '10%',
-            right: '15%',
-            width: '200px',
-            height: '200px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255,220,100,0.8) 0%, rgba(255,180,50,0) 70%)',
-            filter: 'blur(20px)',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-
-      {currentSeason === 'winter' && (
-        <motion.div
-          initial={{ y: '100%' }}
-          animate={{ y: 0 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '25%',
-            background: 'linear-gradient(to top, rgba(100, 150, 200, 0.4), transparent)',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
+      {/* Minimal progress indicator */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '48px',
+          right: '48px',
+          padding: '12px 20px',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '12px',
+          fontSize: '14px',
+          fontWeight: '700',
+          color: '#64748b',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        }}
+      >
+        {Math.round(progress)}% Complete
+      </div>
     </motion.div>
   );
 }

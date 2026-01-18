@@ -159,6 +159,29 @@ function VoxelTile({ x, z, type, content, health, livestockCount, isDrought }: V
   const placeArmedItem = useGameStore(state => state.placeArmedItem);
   const liquidateAsset = useGameStore(state => state.liquidateAsset);
   const renovateAsset = useGameStore(state => state.renovateAsset);
+  const hasStructureUnlocked = useGameStore(state => state.hasStructureUnlocked);
+  const isDragging = useGameStore(state => state.isDragging);
+  const setIsDragging = useGameStore(state => state.setIsDragging);
+
+  // Smart dependency validation for drag-planting
+  const canPlaceItem = () => {
+    if (!armedItem || type !== 'EMPTY') return false;
+    
+    // Check animal requirements
+    if (armedItem.type === 'animal') {
+      const animalData = {
+        duck: ['pond'],
+        fish: ['pond'],
+        pig: ['barn', 'well'],
+        shrimp: ['pond', 'waterAerator']
+      };
+      const requires = animalData[armedItem.id as keyof typeof animalData];
+      if (requires) {
+        return requires.every(req => hasStructureUnlocked(req));
+      }
+    }
+    return true;
+  };
 
   // Detect new asset placement and destruction
   useEffect(() => {
@@ -201,12 +224,34 @@ function VoxelTile({ x, z, type, content, health, livestockCount, isDrought }: V
   };
 
   const handleClick = () => {
-    if (interactionMode === 'PLANT' && type === 'EMPTY' && armedItem) {
+    if (interactionMode === 'PLANT' && type === 'EMPTY' && armedItem && canPlaceItem()) {
       placeArmedItem(x, z);
     } else if (interactionMode === 'SELL' && type !== 'EMPTY') {
       liquidateAsset(x, z);
     } else if (interactionMode === 'RENOVATE' && type === 'STRUCTURE') {
       renovateAsset(x, z);
+    }
+  };
+
+  const handlePointerDown = (e: any) => {
+    e.stopPropagation();
+    if (interactionMode === 'PLANT' && armedItem && canPlaceItem()) {
+      setIsDragging(true);
+      handleClick();
+    }
+  };
+
+  const handlePointerEnter = () => {
+    setHovered(true);
+    // Drag-to-plant: If dragging and can place, plant immediately
+    if (isDragging && interactionMode === 'PLANT' && armedItem && canPlaceItem()) {
+      placeArmedItem(x, z);
+    }
+  };
+
+  const handlePointerUp = () => {
+    if (isDragging) {
+      setIsDragging(false);
     }
   };
 
@@ -216,7 +261,9 @@ function VoxelTile({ x, z, type, content, health, livestockCount, isDrought }: V
       <mesh
         position={[0, 0, 0]}
         onClick={handleClick}
-        onPointerOver={() => setHovered(true)}
+        onPointerDown={handlePointerDown}
+        onPointerEnter={handlePointerEnter}
+        onPointerUp={handlePointerUp}
         onPointerOut={() => setHovered(false)}
         castShadow
         receiveShadow
@@ -229,7 +276,7 @@ function VoxelTile({ x, z, type, content, health, livestockCount, isDrought }: V
         />
       </mesh>
 
-      {/* Hover highlight ring */}
+      {/* Hover highlight ring - WHITE GLOW in Armed Mode (v6.1) */}
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0.13, 0]}
@@ -237,11 +284,11 @@ function VoxelTile({ x, z, type, content, health, livestockCount, isDrought }: V
       >
         <ringGeometry args={[0.55, 0.65, 32]} />
         <meshStandardMaterial
-          color="#60a5fa"
+          color={armedItem && interactionMode === 'PLANT' ? "#ffffff" : "#60a5fa"}
           transparent
-          opacity={hovered ? 0.35 : 0}
-          emissive="#60a5fa"
-          emissiveIntensity={hovered ? 0.4 : 0}
+          opacity={hovered ? (armedItem && canPlaceItem() ? 0.8 : 0.35) : 0}
+          emissive={armedItem && interactionMode === 'PLANT' ? "#ffffff" : "#60a5fa"}
+          emissiveIntensity={hovered ? (armedItem && canPlaceItem() ? 1.2 : 0.4) : 0}
         />
       </mesh>
 
