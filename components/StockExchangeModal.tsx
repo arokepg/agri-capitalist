@@ -191,21 +191,21 @@ export default function StockExchangeModal({ isOpen, onClose }: StockExchangeMod
             gridTemplateColumns: '1fr 1fr',
             gap: '16px'
           }}>
-            {Object.values(marketState?.assets ?? {}).map((asset: any) => {
-              const holdings = stockHoldings[asset.id] || 0;
-              const priceChange = asset.history.length > 1
-                ? ((asset.currentPrice - asset.history[asset.history.length - 2]) / asset.history[asset.history.length - 2]) * 100
+            {Object.values(marketState?.assets ?? {}).map((stock: any) => {
+              const holdings = stockHoldings[stock.id] || 0;
+              const priceChange = stock.history.length > 1
+                ? ((stock.currentPrice - stock.history[stock.history.length - 2]) / stock.history[stock.history.length - 2]) * 100
                 : 0;
               const isUp = priceChange > 0.5;
               const isDown = priceChange < -0.5;
               const isStable = !isUp && !isDown;
 
-              const chartData = asset.history.map((price: number, i: number) => ({
+              const chartData = stock.history.map((price: number, i: number) => ({
                 year: i + 1,
                 price
               }));
 
-              const isSelected = selectedAsset === asset.id;
+              const isSelected = selectedAsset === stock.id;
 
               return (
                 <div

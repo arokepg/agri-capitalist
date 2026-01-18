@@ -54,7 +54,7 @@ export default function ShopSidebar() {
   const hasStructureUnlocked = useGameStore(state => state.hasStructureUnlocked);
   const goldHoldings = useGameStore(state => state.goldHoldings);
   const dollarHoldings = useGameStore(state => state.dollarHoldings);
-  const stocksHoldings = useGameStore(state => state.stocksHoldings);
+  const stockHoldings = useGameStore(state => state.stockHoldings);
   const marketState = useGameStore(state => state.marketState);
   
   const armCursor = useGameStore(state => state.armCursor);
@@ -64,8 +64,8 @@ export default function ShopSidebar() {
   const sellGold = useGameStore(state => state.sellGold);
   const buyDollar = useGameStore(state => state.buyDollar);
   const sellDollar = useGameStore(state => state.sellDollar);
-  const buyStocks = useGameStore(state => state.buyStocks);
-  const sellStocks = useGameStore(state => state.sellStocks);
+  const buyStock = useGameStore(state => state.buyStock);
+  const sellStock = useGameStore(state => state.sellStock);
 
   const filteredItems = SHOP_ITEMS.filter(item => item.category === activeTab);
   
@@ -656,7 +656,7 @@ export default function ShopSidebar() {
               📈 Stocks
             </h3>
             <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '12px' }}>
-              Holdings: {stocksHoldings} shares | Price: {formatCurrency(currentStocksPrice)}/share
+              Holdings: {stockHoldings['stocks'] || 0} shares | Price: {formatCurrency(currentStocksPrice)}/share
             </div>
             
             {/* Interactive Line Graph */}
@@ -705,7 +705,7 @@ export default function ShopSidebar() {
             
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
-                onClick={() => buyStocks(1)}
+                onClick={() => buyStock('stocks', 1)}
                 disabled={cash < currentStocksPrice}
                 style={{
                   flex: 1,
@@ -722,18 +722,18 @@ export default function ShopSidebar() {
                 BUY 1
               </button>
               <button
-                onClick={() => sellStocks(1)}
-                disabled={stocksHoldings < 1}
+                onClick={() => sellStock('stocks', 1)}
+                disabled={(stockHoldings['stocks'] || 0) < 1}
                 style={{
                   flex: 1,
                   padding: '10px',
-                  backgroundColor: stocksHoldings >= 1 ? '#ef4444' : '#cbd5e1',
+                  backgroundColor: (stockHoldings['stocks'] || 0) >= 1 ? '#ef4444' : '#cbd5e1',
                   border: 'none',
                   borderRadius: '8px',
                   color: '#fff',
                   fontSize: '12px',
                   fontWeight: '700',
-                  cursor: stocksHoldings >= 1 ? 'pointer' : 'not-allowed'
+                  cursor: (stockHoldings['stocks'] || 0) >= 1 ? 'pointer' : 'not-allowed'
                 }}
               >
                 SELL 1
