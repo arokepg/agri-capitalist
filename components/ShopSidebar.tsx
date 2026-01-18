@@ -7,7 +7,6 @@ import {
   DuckIcon, FishIcon, PigIcon, ShrimpIcon,
   PondIcon, BarnIcon, WellIcon, WaterAeratorIcon
 } from './AssetIcons';
-import { CoinIcon, IntegrityIcon } from './FinancialIconSet';
 
 // 4-TAB SHOP SYSTEM: CROPS, ANIMALS, STRUCTURES, INVESTMENTS
 type Category = 'CROPS' | 'ANIMALS' | 'STRUCTURES' | 'INVESTMENTS';
@@ -45,7 +44,6 @@ const SHOP_ITEMS: ShopItem[] = [
 
 export default function ShopSidebar() {
   const [activeTab, setActiveTab] = useState<Category>('CROPS');
-  const [showInsuranceModal, setShowInsuranceModal] = useState(false);
   
   const cash = useGameStore(state => state.cash);
   const armedItem = useGameStore(state => state.armedItem);

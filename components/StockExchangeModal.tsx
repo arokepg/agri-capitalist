@@ -7,8 +7,7 @@ import {
   ChartIcon, 
   StockUpIcon, 
   StockDownIcon, 
-  StockStableIcon,
-  CoinIcon 
+  StockStableIcon
 } from './FinancialIconSet';
 import { XIcon } from './IconLibrary';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
