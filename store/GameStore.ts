@@ -481,7 +481,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const droughtPenalty = get().isDrought ? (hasWell ? 1 : 0.6) : 1;
     const currentState = get();
 
-    const clearedGrid = currentState.grid.map(tile => {
+    const clearedGrid: GridTile[] = currentState.grid.map((tile): GridTile => {
       if (tile.type === 'CROP' && tile.content) {
         const base = cropBase[tile.content] ?? CROP_BASE_VALUE;
         const marketFactor = (currentState.marketState as any)?.commodities?.[tile.content]?.priceMultiplier ?? currentState.sellPriceMultiplier;
